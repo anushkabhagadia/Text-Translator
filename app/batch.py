@@ -1,12 +1,3 @@
-"""
-Batch translation: translate every line of a text file, or every value
-in a JSON file, without hand-looping in the caller.
-
-This is the "updated tweak" over a plain single-string translator: real
-use cases (localizing a UI strings file, translating a list of product
-descriptions) are batch jobs, not one-off calls.
-"""
-
 import json
 from pathlib import Path
 from typing import List
@@ -59,10 +50,8 @@ def translate_json_values(
     target_language: str,
 ) -> dict:
     """
-    Translate every string value in a flat JSON object (e.g. a UI strings /
-    i18n file: {"welcome_message": "Hello!", "logout_button": "Log out"}).
-    Keys are left untouched; only values are translated. Non-string values
-    pass through unchanged.
+    Translate every string value in a flat JSON object (e.g. a UI strings: {"welcome_message": "Hello!", "logout_button": "Log out"}).
+    Keys are left untouched; only values are translated. Non-string values pass through unchanged.
     """
     data = json.loads(Path(input_path).read_text(encoding="utf-8"))
 
