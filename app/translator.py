@@ -1,22 +1,3 @@
-"""
-Core translation logic.
-
-Uses the Groq API (running Llama 3.3 70B, an open model) as the translation
-engine instead of a dedicated translation API. Trade-off, stated plainly:
-
-  + Handles idiom, tone, and formatting instructions ("keep it formal",
-    "preserve markdown") that rule-based translation APIs can't.
-  + One call can auto-detect the source language AND translate, so no
-    separate language-detection step/library is needed.
-  + Groq's free tier makes this viable to run and demo without cost.
-  - Slower and more expensive per-request than a dedicated translation
-    API (e.g. Google Translate) for pure high-volume, no-context text.
-
-This is a deliberate choice to demonstrate LLM API integration, not a
-claim that this is the "best" approach for every production translation
-use case.
-"""
-
 import os
 import json
 from dataclasses import dataclass
