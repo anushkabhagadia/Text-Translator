@@ -1,12 +1,5 @@
 """
 REST API for the translator.
-
-Endpoints:
-    POST /translate         -> translate a single string
-    POST /translate/batch   -> translate a list of strings
-    GET  /health            -> liveness check
-
-Run with: python -m app.api
 """
 
 from flask import Flask, request, jsonify, render_template
