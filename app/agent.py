@@ -1,22 +1,3 @@
-"""
-Multi-turn translation agent.
-
-The difference from Translator (translator.py): Translator handles one
-request -> one response, with no memory of prior turns. TranslationAgent
-holds a conversation, so follow-up instructions like "make it more formal"
-or "now do that in Japanese instead" are understood in context, without
-the caller having to re-supply the original text each time.
-
-This is a deliberately small step up from a single API call: same
-underlying model, but the interaction pattern (maintain history, let each
-turn build on the last, let the model decide how to interpret an
-ambiguous follow-up) is the agentic piece, not a bigger model or more
-tools.
-
-Runs on Groq (Llama 3.3 70B) — a free-tier-friendly provider, chosen so
-this project can be run and demoed without any API cost.
-"""
-
 import os
 from dataclasses import dataclass, field
 from typing import List, Optional
