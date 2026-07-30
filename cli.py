@@ -1,18 +1,3 @@
-#!/usr/bin/env python3
-"""
-Command-line interface for the translator.
-
-Examples:
-    # Single string
-    python cli.py translate "Bonjour tout le monde" --to English
-
-    # Whole text file, line by line
-    python cli.py translate-file input.txt output.txt --to Spanish
-
-    # JSON i18n-style file (translates values, keeps keys)
-    python cli.py translate-json strings.json strings_fr.json --to French
-"""
-
 import argparse
 import sys
 
