@@ -59,13 +59,17 @@ text-translator/
 │   ├── translator.py    # core Translator class, wraps the Groq API
 │   ├── batch.py          # batch file / JSON translation
 │   ├── agent.py           # multi-turn conversational agent
-│   └── api.py              # Flask REST API (translate + chat endpoints)
+│   ├── api.py              # Flask REST API + serves the web UI
+│   └── templates/
+│       └── index.html        # browser-based UI
 ├── cli.py                  # command-line interface
 ├── chat.py                 # interactive multi-turn chat CLI
 ├── tests/
 │   ├── test_translator.py  # mocked-API unit tests
 │   ├── test_batch.py
 │   └── test_agent.py
+├── .env.example
+├── .gitignore
 └── requirements.txt
 ```
 
@@ -73,13 +77,37 @@ text-translator/
 
 ```bash
 pip install -r requirements.txt
-export GROQ_API_KEY=your_key_here
 ```
 
 Get a free key at [console.groq.com](https://console.groq.com) — no credit
 card required, generous free-tier rate limits.
 
+**Set your key using one of these two options:**
+
+**Option A — `.env` file (recommended, one-time setup):**
+```bash
+cp .env.example .env
+# then edit .env and paste your real key in place of "your_key_here"
+```
+The project auto-loads `.env` on every run — no need to set the key again
+per terminal session. `.env` is gitignored, so it never gets committed.
+
+**Option B — environment variable (per-session, no file needed):**
+```bash
+export GROQ_API_KEY=your_key_here      # Mac/Linux
+$env:GROQ_API_KEY="your_key_here"      # Windows PowerShell
+set GROQ_API_KEY=your_key_here         # Windows Command Prompt
+```
+This only lasts for the current terminal session.
+
 ## Usage
+
+**Web UI (no terminal commands needed after starting the server):**
+```bash
+python -m app.api
+```
+Then open **http://localhost:5000** in your browser. Type text on the
+left, pick a target language, click Translate (or Cmd/Ctrl+Enter).
 
 **CLI:**
 ```bash

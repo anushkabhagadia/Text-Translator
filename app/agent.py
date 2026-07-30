@@ -21,7 +21,10 @@ import os
 from dataclasses import dataclass, field
 from typing import List, Optional
 
+from dotenv import load_dotenv
 from groq import Groq
+
+load_dotenv()  # reads a local .env file, if present, into os.environ
 
 MODEL = "llama-3.3-70b-versatile"
 

@@ -61,6 +61,37 @@ def test_translate_strips_markdown_code_fences(mock_groq_cls):
     assert result.translated_text == "Goodbye"
 
 
+@patch("app.translator.Groq")
+def test_translate_strips_echoed_delimiters(mock_groq_cls):
+    """
+    Regression test: Llama 3.3 was observed echoing the prompt's text
+    delimiters back inside translated_text (e.g. "---\nHello world\n---").
+    The delimiter markers should never appear in the returned translation.
+    """
+    mock_message = MagicMock()
+    mock_message.content = json.dumps(
+        {
+            "detected_source_language": "French",
+            "translated_text": "TEXT_TO_TRANSLATE_START\nHello world\nTEXT_TO_TRANSLATE_END",
+        }
+    )
+    mock_choice = MagicMock()
+    mock_choice.message = mock_message
+    mock_response = MagicMock()
+    mock_response.choices = [mock_choice]
+
+    mock_client = MagicMock()
+    mock_client.chat.completions.create.return_value = mock_response
+    mock_groq_cls.return_value = mock_client
+
+    translator = Translator(api_key="fake-key-for-test")
+    result = translator.translate("Bonjour le monde", "English")
+
+    assert result.translated_text == "Hello world"
+    assert "TEXT_TO_TRANSLATE_START" not in result.translated_text
+    assert "TEXT_TO_TRANSLATE_END" not in result.translated_text
+
+
 def test_translate_rejects_empty_text():
     translator = Translator(api_key="fake-key-for-test")
     with pytest.raises(ValueError):

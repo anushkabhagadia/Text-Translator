@@ -1,6 +1,5 @@
-#!/usr/bin/env python3
-
 from app.agent import TranslationAgent
+
 
 def main():
     print("Translation Agent — multi-turn chat")

@@ -22,7 +22,10 @@ import json
 from dataclasses import dataclass
 from typing import Optional
 
+from dotenv import load_dotenv
 from groq import Groq
+
+load_dotenv()  # reads a local .env file, if present, into os.environ
 
 MODEL = "llama-3.3-70b-versatile"
 
@@ -78,21 +81,24 @@ class Translator:
             else "Formatting does not need to be preserved."
         )
 
-        prompt = f"""Translate the text below into {target_language}.
+        prompt = f"""Translate the following text into {target_language}.
 
 {formatting_note}
 
-Respond with ONLY a JSON object, no other text, no markdown code fences, in exactly this shape:
+Respond with ONLY a JSON object in exactly this shape, and nothing else:
 {{"detected_source_language": "<language name>", "translated_text": "<translation>"}}
 
-Text to translate:
----
+The "translated_text" field must contain ONLY the translation itself — do
+not include any delimiters, labels, or the original text in that field.
+
+TEXT_TO_TRANSLATE_START
 {text}
----"""
+TEXT_TO_TRANSLATE_END"""
 
         response = self.client.chat.completions.create(
             model=MODEL,
             max_tokens=4096,
+            response_format={"type": "json_object"},
             messages=[{"role": "user", "content": prompt}],
         )
 
@@ -112,9 +118,15 @@ Text to translate:
         if "translated_text" not in parsed or "detected_source_language" not in parsed:
             raise TranslationError(f"Model response missing expected keys: {parsed}")
 
+        translated_text = parsed["translated_text"].strip()
+        # Defensive cleanup: if the model echoed our delimiters despite instructions,
+        # strip them rather than failing the whole translation.
+        for marker in ("TEXT_TO_TRANSLATE_START", "TEXT_TO_TRANSLATE_END", "---"):
+            translated_text = translated_text.replace(marker, "").strip()
+
         return TranslationResult(
             source_text=text,
-            translated_text=parsed["translated_text"],
+            translated_text=translated_text,
             detected_source_language=parsed["detected_source_language"],
             target_language=target_language,
         )

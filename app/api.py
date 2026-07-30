@@ -9,7 +9,7 @@ Endpoints:
 Run with: python -m app.api
 """
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 
 from .translator import Translator, TranslationError
 from .agent import TranslationAgent
@@ -21,6 +21,12 @@ translator = Translator()
 # history — fine for local/demo use, not for multi-user production (where
 # you'd key a dict of agents by session/user id instead).
 chat_agent = TranslationAgent()
+
+
+@app.get("/")
+def index():
+    """Serves the browser-based UI (app/templates/index.html)."""
+    return render_template("index.html")
 
 
 @app.get("/health")
