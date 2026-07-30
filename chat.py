@@ -1,22 +1,6 @@
 #!/usr/bin/env python3
-"""
-Interactive multi-turn translation chat.
-
-Run with:
-    python chat.py
-
-Then just type naturally:
-    > Translate "good morning" to French
-    > Now make it more formal
-    > Actually, do that in Japanese instead
-    > exit
-
-Type 'reset' to clear history and start a new conversation,
-or 'exit' / 'quit' to leave.
-"""
 
 from app.agent import TranslationAgent
-
 
 def main():
     print("Translation Agent — multi-turn chat")
